@@ -1,4 +1,4 @@
-/d1/ccBench/pantheon-modified/src/experiments/data/*
-/d1/ccBench/pantheon-modified/third_party/tcpdatagen/dataset/*
-/d1/ccBench/pantheon-modified/tmp/*
+/d1/ccBench/pantheon-modified/src/experiments/data
+/d1/ccBench/pantheon-modified/third_party/tcpdatagen/dataset
+/d1/ccBench/pantheon-modified/tmp
 mahimahi
