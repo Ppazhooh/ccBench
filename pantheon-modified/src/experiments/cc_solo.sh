@@ -30,9 +30,18 @@ down=$downl
 log=${comment}-$scheme-$down-$lat-$qs-$loss
 echo "************************ Running $log *********************************"
 
-python2.7 test.py local --schemes $scheme --uplink-trace traces/$down --downlink-trace traces/$upl -t $time \
+
+echo "/d1/anaconda3/envs/python2/bin/python test.py local --schemes tcpdatagen --uplink-trace traces/$down --downlink-trace traces/$upl -t $time \
     --extra-mm-link-args "--uplink-queue=droptail --uplink-queue-args=\"packets=$qs\" --downlink-queue=droptail --downlink-queue-args=\"packets=$qs" \
     --prepend-mm-cmds " mm-loss uplink $loss mm-loss downlink $loss mm-delay $lat " \
     --setup_time $setup_time --orcalearn 4 --random-order -f $num_of_flows --interval $interval --run-times $num_times --data-dir data/$log  \
     --save 1 --rm 0 --comment \"${down}_${lat}_${qs}_${loss}\" --tcpgen_cc $scheme --bw $bw \
     --basetime_fld "$basetimestamp_fld\/$log\/${scheme}_mm_acklink_run1.log_init_timestamp" --bw2 $bw2 --trace_period $trace_period
+"
+/d1/anaconda3/envs/python2/bin/python test.py local --schemes tcpdatagen --uplink-trace traces/$down --downlink-trace traces/$upl -t $time \
+    --extra-mm-link-args "--uplink-queue=droptail --uplink-queue-args=\"packets=$qs\" --downlink-queue=droptail --downlink-queue-args=\"packets=$qs" \
+    --prepend-mm-cmds " mm-loss uplink $loss mm-loss downlink $loss mm-delay $lat " \
+    --setup_time $setup_time --orcalearn 4 --random-order -f $num_of_flows --interval $interval --run-times $num_times --data-dir data/$log  \
+    --save 1 --rm 0 --comment \"${down}_${lat}_${qs}_${loss}\" --tcpgen_cc $scheme --bw $bw \
+    --basetime_fld "$basetimestamp_fld\/$log\/${scheme}_mm_acklink_run1.log_init_timestamp" --bw2 $bw2 --trace_period $trace_period
+

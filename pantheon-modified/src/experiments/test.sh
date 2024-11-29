@@ -1,0 +1,1 @@
+./cc_solo.sh vegas single-flow-scenario 1 1 0 20 1000 0 12 30 12 12 10
