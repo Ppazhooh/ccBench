@@ -103,73 +103,73 @@ done
 sleep 30
 cpu_num=$((sys_cpu_cnt))
 
-# for cc in $schemes
-# do
-#     for loss in $loss_list
-#     do
-#         for bw in $bw_list
-#         do
-#             for del in $del_list
-#             do
-#                 bdp=$((del*bw/6))
-#                 for qs in $((bdp/2)) $bdp $((2*bdp)) $((4*bdp)) $((8*bdp)) $((16*bdp))
-#                 do
-#                     for dl_post in ""
-#                     do
-#                         link="$bw$dl_post"
-#                         echo "./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw $setup_time"
-#                         ./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw $setup_time &
-#                         cnt=$((cnt+1))
-#                         pids="$pids $!"
-#                         sleep 2
-#                     done
-#                     if [ $bw -lt 50 ]
-#                     then
-#                         scales="2 4"
-#                     elif [ $bw -lt 100 ]
-#                     then
-#                         scales="2 4"
-#                     elif [ $bw -lt 200 ]
-#                     then
-#                         scales=""
-#                     else
-#                         scales=""
-#                     fi
-#                     for scale in $scales
-#                     do
-#                         dl_post="-${scale}x-u-7s-plus-10"
-#                         bw2=$((bw*scale))
-#                         link="$bw$dl_post"
-#                         echo "./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time"
-#                         ./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time &
-#                         cnt=$((cnt+1))
-#                         pids="$pids $!"
-#                     done
-#                     scales="2 4"
-#                     for scale in $scales
-#                     do
-#                         dl_post="-${scale}x-d-7s-plus-10"
-#                         bw2=$((bw/scale))
-#                         link="$bw$dl_post"
-#                         echo "./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time"
-#                         ./cc_solo_analysis.sh $cc dataset-gen 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time &
-#                         cnt=$((cnt+1))
-#                         pids="$pids $!"
-#                     done
-#                     if [ $cnt -gt $cpu_num ]
-#                     then
-#                         for pid in $pids
-#                         do
-#                             wait $pid
-#                         done
-#                         cnt=0
-#                         pids=""
-#                     fi
-#                 done
-#             done
-#         done
-#     done
-# done
+for cc in $schemes
+do
+    for loss in $loss_list
+    do
+        for bw in $bw_list
+        do
+            for del in $del_list
+            do
+                bdp=$((del*bw/6))
+                for qs in $((bdp/2)) $bdp $((2*bdp)) $((4*bdp)) $((8*bdp)) $((16*bdp))
+                do
+                    for dl_post in ""
+                    do
+                        link="$bw$dl_post"
+                        echo "./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw $setup_time"
+                        ./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw $setup_time &
+                        cnt=$((cnt+1))
+                        pids="$pids $!"
+                        sleep 2
+                    done
+                    if [ $bw -lt 50 ]
+                    then
+                        scales="2 4"
+                    elif [ $bw -lt 100 ]
+                    then
+                        scales="2 4"
+                    elif [ $bw -lt 200 ]
+                    then
+                        scales=""
+                    else
+                        scales=""
+                    fi
+                    for scale in $scales
+                    do
+                        dl_post="-${scale}x-u-7s-plus-10"
+                        bw2=$((bw*scale))
+                        link="$bw$dl_post"
+                        echo "./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time"
+                        ./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time &
+                        cnt=$((cnt+1))
+                        pids="$pids $!"
+                    done
+                    scales="2 4"
+                    for scale in $scales
+                    do
+                        dl_post="-${scale}x-d-7s-plus-10"
+                        bw2=$((bw/scale))
+                        link="$bw$dl_post"
+                        echo "./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time"
+                        ./cc_solo_analysis.sh $cc single-flow-scenario 1 1 0 $del $qs "$loss" $link $time $bw $bw2 $setup_time &
+                        cnt=$((cnt+1))
+                        pids="$pids $!"
+                    done
+                    if [ $cnt -gt $cpu_num ]
+                    then
+                        for pid in $pids
+                        do
+                            wait $pid
+                        done
+                        cnt=0
+                        pids=""
+                    fi
+                done
+            done
+        done
+    done
+done
 sudo ./clean-tmp.sh
 # for cc in $schemes
 # do

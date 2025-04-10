@@ -2,3 +2,4 @@ pantheon-modified/src/experiments/data/
 pantheon-modified/third_party/tcpdatagen/dataset/
 pantheon-modified/tmp/
 mahimahi/
+*.pyc
