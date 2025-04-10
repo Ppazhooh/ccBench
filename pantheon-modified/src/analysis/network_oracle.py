@@ -33,8 +33,7 @@ def analyze_trace_file(filename):
     for i in range(num_points):
         start_time = times[i] - time_step
         end_time = times[i]
-        
-        # Select lines within the time window
+ 
         selected_lines = [line for line in lines if start_time <= float(line.split()[0]) < end_time]
         
         # Calculate channel capacity
@@ -53,6 +52,7 @@ def analyze_trace_file(filename):
 
         # Store the results
         times_df[i] = end_time
+
         channel_capacities[i] = channel_capacity
         avg_queuing_delays[i] = avg_queuing_delay
         packets_change[i] = change
@@ -65,7 +65,7 @@ def analyze_trace_file(filename):
         'packets_change': packets_change
     })
 
-    print('FINISHED ANALYSIS')
+
 
     output_filename = filename.split('/')[-2] + '.csv'
     output_filename = output_filename.replace('single-flow-scenario-', '')
