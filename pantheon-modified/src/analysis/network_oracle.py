@@ -4,7 +4,7 @@ import sys
 
 def analyze_trace_file(filename):
     print('READING: ' + filename)
-
+    
     with open(filename) as file:
         lines = file.readlines()
         lines = lines[7:-1]
@@ -12,25 +12,34 @@ def analyze_trace_file(filename):
 
     print('FINISHED READING')
     df = pd.DataFrame(columns=['time', 'channel_capacity', 'avg_queuing_delay', 'packets_change'])
+    print(filename)
+    # cwnd_file = filename.split('/')[-2].replace("single-flow-scenario-", "").replace("-", "_")
+    cwnd_file = filename.split('/')[-2].replace("single-flow-scenario-", "")
+    cwnd_file_full_path = '/d1/ccBench/pantheon-modified/third_party/tcpdatagen/dataset/' + cwnd_file + '-cwnd.txt'
+    
 
     times = []
     channel_capacities = []
     avg_queuing_delays = []
     packets_change = []
 
-    print(lines[0])
-    t0 = float(lines[0].split()[0])
-    time_step = 100
+    time_step = 10 # in ms
+    with open(cwnd_file_full_path, "r") as f:
+        first_line = f.readline()
+        t0 = (float(first_line.split()[0])*1000) -  time_step
+
+   
     last_time = float(lines[-1].split()[0])
 
     start_time = t0 
     end_time = t0 + time_step
 
     while end_time < last_time:
-        selected_lines = [line for line in lines if start_time <= float(line.split()[0]) <= end_time]
+        selected_lines = [line for line in lines if start_time <= float(line.split()[0]) < end_time]
 
         channel_bytes = sum(int(line.split()[2]) for line in selected_lines if '#' in line.split()[1])
-        channel_capacity = channel_bytes * 8 / 100000  # Convert to Mbps
+
+        channel_capacity = (channel_bytes / time_step) * 8* 1000 / 1000000  # Convert to Mbps
 
         egress_lines = [line for line in selected_lines if '-' in line.split()[1]]
         egress_packts = len(egress_lines)
@@ -40,7 +49,7 @@ def analyze_trace_file(filename):
         ingress_packts = sum(1 for line in selected_lines if '+' in line.split()[1])
         change = egress_packts - ingress_packts
 
-        times.append(start_time)
+        times.append(end_time)
         channel_capacities.append(channel_capacity)
         avg_queuing_delays.append(avg_queuing_delay)
         packets_change.append(change)

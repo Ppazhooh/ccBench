@@ -387,7 +387,7 @@ void* CntThread(void* information)
     int fairness_phase_cnt=0;
 
     char file_name[1000];
-    sprintf(file_name,"%s/../dataset/%s_%s_cwnd.txt",path,scheme,log_file);
+    sprintf(file_name,"%s/../dataset/%s-%s-cwnd.txt",path,scheme,log_file);
     ofstream measurement_file(file_name);
 
     DBGERROR("********************************* fileName:%s\n",file_name);

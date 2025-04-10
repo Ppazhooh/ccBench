@@ -38,7 +38,7 @@ echo "python2.7 test.py local --schemes tcpdatagen --uplink-trace traces/$down -
 --extra-mm-link-args "--uplink-queue=droptail --uplink-queue-args=\"packets=$qs\" --downlink-queue=droptail --downlink-queue-args=\"packets=$qs" \
 --prepend-mm-cmds " mm-loss uplink $loss mm-loss downlink $loss mm-delay $lat " \
 --setup_time $setup_time --orcalearn 4 --random-order -f $num_of_flows --interval $interval --run-times $num_times --data-dir data/$log  \
---save 1 --rm 0 --comment \"${down}_${lat}_${qs}_${loss}\" --tcpgen_cc $scheme --bw $bw \
+--save 1 --rm 0 --comment \"${down}-${lat}-${qs}-${loss}\" --tcpgen_cc $scheme --bw $bw \
 --basetime_fld "$basetimestamp_fld\/$log\/tcpdatagen_mm_acklink_run1.log_init_timestamp" --bw2 $bw2 --trace_period $trace_period
 "
 
@@ -46,5 +46,5 @@ python2.7 test.py local --schemes tcpdatagen --uplink-trace traces/$down --downl
 --extra-mm-link-args "--uplink-queue=droptail --uplink-queue-args=\"packets=$qs\" --downlink-queue=droptail --downlink-queue-args=\"packets=$qs" \
 --prepend-mm-cmds " mm-loss uplink $loss mm-loss downlink $loss mm-delay $lat " \
 --setup_time $setup_time --orcalearn 4 --random-order -f $num_of_flows --interval $interval --run-times $num_times --data-dir data/$log  \
---save 1 --rm 0 --comment \"${down}_${lat}_${qs}_${loss}\" --tcpgen_cc $scheme --bw $bw \
+--save 1 --rm 0 --comment \"${down}-${lat}-${qs}-${loss}\" --tcpgen_cc $scheme --bw $bw \
 --basetime_fld "$basetimestamp_fld\/$log\/tcpdatagen_mm_acklink_run1.log_init_timestamp" --bw2 $bw2 --trace_period $trace_period
