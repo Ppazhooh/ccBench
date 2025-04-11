@@ -28,6 +28,7 @@ def analyze_trace_file(filename):
     channel_capacities = np.zeros(num_points)
     avg_queuing_delays = np.zeros(num_points)
     packets_change = np.zeros(num_points)
+    drop_rates = np.zeros(num_points)
 
     # Process the data
     for i in range(num_points):
@@ -38,42 +39,45 @@ def analyze_trace_file(filename):
         
         # Calculate channel capacity
         channel_bytes = sum(int(line.split()[2]) for line in selected_lines if '#' in line.split()[1])
-        channel_capacity = (channel_bytes / time_step) * 8 * 1000 / 1000000  # Convert to Mbps
+        channel_capacity = (channel_bytes / float(time_step)) * 8 * 1000 / 1000000  # Convert to Mbps
 
         # Calculate avg queuing delay
         egress_lines = [line for line in selected_lines if '-' in line.split()[1]]
         egress_packets = len(egress_lines)
         delay = sum(int(line.split()[3]) for line in egress_lines)
-        avg_queuing_delay = delay / egress_packets if egress_packets else 0
+        avg_queuing_delay = delay / float(egress_packets) if egress_packets else 0
 
-        # Calculate packet change
+        # Drop rate
+        drops = sum(1 for line in selected_lines if 'd' in line.split()[1])
+        drop_rate = float(drops) / (drops + egress_packets) if (drops + egress_packets) > 0 else 0
+ 
+        # Packet change
         ingress_packets = sum(1 for line in selected_lines if '+' in line.split()[1])
         change = egress_packets - ingress_packets
 
         # Store the results
         times_df[i] = end_time
-
         channel_capacities[i] = channel_capacity
         avg_queuing_delays[i] = avg_queuing_delay
         packets_change[i] = change
+        drop_rates[i] = drop_rate
 
     # Create DataFrame from the pre-allocated arrays
     df = pd.DataFrame({
         'time': times_df,
         'channel_capacity': channel_capacities,
         'avg_queuing_delay': avg_queuing_delays,
-        'packets_change': packets_change
+        'packets_change': packets_change,
+        'drop_rate': drop_rates
     })
-
-
 
     output_filename = filename.split('/')[-2] + '.csv'
     output_filename = output_filename.replace('single-flow-scenario-', '')
     output_base_address = '/d1/ccBench/pantheon-modified/third_party/tcpdatagen/dataset/'
     print(output_filename)
 
-    # Write the DataFrame to CSV in one call
-    df.to_csv(output_base_address + output_filename, index=False, header=False)
+    # Write the DataFrame to CSV
+    df.to_csv(output_base_address + output_filename, index=False, header=True)
 
 if __name__ == '__main__':
     if len(sys.argv) != 2:
