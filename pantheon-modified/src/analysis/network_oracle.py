@@ -11,6 +11,8 @@ def analyze_trace_file(filename):
         lines = [line.rstrip() for line in lines]
 
     print('FINISHED READING')
+    
+    mRTT = int(filename.split('/')[-2].split('-')[-2])
 
     # Extract the cwnd file path
     cwnd_file = filename.split('/')[-2].replace("single-flow-scenario-", "")
@@ -29,6 +31,9 @@ def analyze_trace_file(filename):
     avg_queuing_delays = np.zeros(num_points)
     packets_change = np.zeros(num_points)
     drop_rates = np.zeros(num_points)
+    rec_rates = np.zeros(num_points)
+    # put mRTT as all the values of an array called mRTTs
+    mRTTs = np.full(num_points, mRTT)
 
     # Process the data
     for i in range(num_points):
@@ -50,10 +55,14 @@ def analyze_trace_file(filename):
         # Drop rate
         drops = sum(1 for line in selected_lines if 'd' in line.split()[1])
         drop_rate = float(drops) / (drops + egress_packets) if (drops + egress_packets) > 0 else 0
- 
+
         # Packet change
         ingress_packets = sum(1 for line in selected_lines if '+' in line.split()[1])
         change = egress_packets - ingress_packets
+        
+         # Calculate received capacity
+        received_bytes = sum(int(line.split()[2]) for line in selected_lines if '-' in line.split()[1])
+        rec_rate = (received_bytes / float(time_step)) * 8 * 1000 / 1000000  # Convert to Mbps
 
         # Store the results
         times_df[i] = end_time
@@ -61,6 +70,7 @@ def analyze_trace_file(filename):
         avg_queuing_delays[i] = avg_queuing_delay
         packets_change[i] = change
         drop_rates[i] = drop_rate
+        rec_rates[i] = rec_rate
 
     # Create DataFrame from the pre-allocated arrays
     df = pd.DataFrame({
@@ -68,7 +78,9 @@ def analyze_trace_file(filename):
         'channel_capacity': channel_capacities,
         'avg_queuing_delay': avg_queuing_delays,
         'packets_change': packets_change,
-        'drop_rate': drop_rates
+        'drop_rate': drop_rates,
+        'rec_rate': rec_rates,
+        'mRTT': mRTTs
     })
 
     output_filename = filename.split('/')[-2] + '.csv'
