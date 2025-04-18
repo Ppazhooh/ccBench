@@ -772,7 +772,7 @@ void* CntThread(void* information)
                                lost_l.get_avg(),lost_l.get_min(),lost_l.get_max() 
                                );
 
-                       sprintf(message,"%.7f %.7f %s  %.7f   %.7f %.7f   %.7f %.7f    %.7f %.7f    %.7f %.7f   %.7f %.7f   %.7f %.7f",
+                       sprintf(message,"%.7f %.7f %s  %.7f   %.7f %.7f   %.7f %.7f    %.7f %.7f    %.7f %.7f   %.7f %.7f %.7f   %.7f %.7f",
                             //0                           1        [2-63] 
                             (double)time_on_trace/1e3, max_tmp, message_extra,
                             //64
@@ -789,7 +789,9 @@ void* CntThread(void* information)
                             (pre_dr_w_max>0.0)?(dr_w_max/pre_dr_w_max):dr_w_max,
                             //74
                             dr_w_max/BW_NORM_FACTOR,
-                            //75    76
+                            //75
+                            sage_info.min_rtt / 1000.0 , // in milliseconds
+                            //76    77
                             reward,cwnd_rate);
 
                         measurement_file << message<<"\n";
